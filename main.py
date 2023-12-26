@@ -23,5 +23,14 @@ def do_blur():
         blur.save('blur_pic.jpg')
         print_info_image(blur)
 
+def do_rotate():
+    with Image.open('original.jpg') as orig:
+        rot = orig.transpose(Image.ROTATE_90)
+        rot.show()
+        rot.save('blur_pic.jpg')
+        print_info_image(rot)
+
 if __name__ == '__main__':
+    do_bw()
     do_blur()
+    do_rotate()
