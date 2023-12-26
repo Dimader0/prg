@@ -1,7 +1,7 @@
 from PIL import Image, ImageFilter
 
 #открой файл с оригиналом картинки
-with Image.open('original.jpg') as orig:
+with Image.open('or.png') as orig:
     orig.show()
 
 #сделай оригинал изображения чёрно-белым
