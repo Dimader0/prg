@@ -17,10 +17,10 @@ def do_bw():
         print_info_image(wb)
 
 def do_blur():
-        with Image.open('original.jpg') as orig:
-            blur = orig.filter(ImageFilter.BLUR)
-            blur.show()
-            print_info_image(blur)
+    with Image.open('original.jpg') as orig:
+        blur = orig.filter(ImageFilter.BLUR)
+        blur.show()
+        print_info_image(blur)
 
 if __name__ == '__main__':
     do_blur()
