@@ -1,15 +1,26 @@
 from PIL import Image, ImageFilter
 
-#открой файл с оригиналом картинки
-with Image.open('original.jpg') as orig:
+def print_info_image(image:Image.Image):
     print(f'''
-          Size: {orig.size}
-          Color: {orig.mode}
-          Format: {orig.format}
-          ''')
+    Size: {image.size}
+    Color: {image.mode}
+    Format: {image.format}
+    ''')
 
-#сделай оригинал изображения чёрно-белым
 
-#сделай оригинал изображения размытым
+def do_bw():
+    with Image.open('original.jpg') as orig:
+        print_info_image(orig)  
+        wb = orig.convert('L')
+        wb.show()
+        wb.save('wb_pic.jpg')
+        print_info_image(wb)
 
-#поверни оригинал изображения на 180 градусов
+def do_blur():
+        with Image.open('original.jpg') as orig:
+            blur = orig.filter(ImageFilter.BLUR)
+            blur.show()
+            print_info_image(blur)
+
+if __name__ == '__main__':
+    do_blur()
