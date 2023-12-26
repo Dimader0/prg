@@ -25,9 +25,9 @@ def do_blur():
 
 def do_rotate():
     with Image.open('original.jpg') as orig:
-        rot = orig.transpose(Image.ROTATE_90)
+        rot = orig.transpose(Image.ROTATE_180)
         rot.show()
-        rot.save('blur_pic.jpg')
+        rot.save('rot_pic.jpg')
         print_info_image(rot)
 
 if __name__ == '__main__':
