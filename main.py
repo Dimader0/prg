@@ -20,6 +20,7 @@ def do_blur():
     with Image.open('original.jpg') as orig:
         blur = orig.filter(ImageFilter.BLUR)
         blur.show()
+        blur.save('blur_pic.jpg')
         print_info_image(blur)
 
 if __name__ == '__main__':
