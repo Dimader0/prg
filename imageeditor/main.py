@@ -58,6 +58,12 @@ def showFilenamesList():
     file_list.clear
     file_list.addItems(result)
 
+def UploadImage():
+    image = file_list.selectedItems()[0].text()
+    with Image.open(image) as original:
+        lb_picture.setText(image)
+
+file_list.itemClicked.connect(UploadImage)
 btn_open_folder.clicked.connect(showFilenamesList)
 main_win.show()
 app.exec_()
