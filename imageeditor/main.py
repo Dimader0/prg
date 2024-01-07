@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QListWidget, QHBoxLayout, QVBoxLayout
-from Pil import Image, ImageFilter
+from PIL import Image, ImageFilter
 
 app = QApplication([])
 main_win = QWidget()
@@ -8,11 +8,11 @@ main_win.resize(700,500)
 lb_picture = QLabel("Зоображення")
 file_list = QListWidget()
 btn_open_folder = QPushButton("Папка")
-btn_left = QPushButton("")
-btn_right = QPushButton("")
-btn_mirror = QPushButton("")
-btn_sharpness = QPushButton("")
-btn_black_white = QPushButton("")
+btn_left = QPushButton("Вліво")
+btn_right = QPushButton("Вправо")
+btn_mirror = QPushButton("Дзеркально")
+btn_sharpness = QPushButton("Різкість")
+btn_black_white = QPushButton("Ч/Б")
 
 main_layout = QHBoxLayout()
 
