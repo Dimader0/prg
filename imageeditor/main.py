@@ -1,5 +1,6 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QListWidget, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QListWidget, QHBoxLayout, QVBoxLayout, QFileDialog
 from PIL import Image, ImageFilter
+from os import *
 
 app = QApplication([])
 main_win = QWidget()
@@ -37,6 +38,26 @@ main_layout.addLayout(col_1, 20)
 main_layout.addLayout(col_2, 80)
 main_win.setLayout(main_layout)
 
+workdir = ''
+def chooseWorkdir():
+    global workdir
+    workdir = QFileDialog.getExistingDirectory()
 
+def filter(filenames, extenshions):
+    result = []
+    for filename in filenames:
+        for ext in extenshions:
+            if filename.endswith(ext):
+                result.append(filename)
+    return result
+
+def showFilenamesList():
+    chooseWorkdir()
+    extenshions = ['.jpg', '.png', '.gif', '.bmp']
+    result = filter(listdir(workdir), extenshions)
+    file_list.clear
+    file_list.addItems(result)
+
+btn_open_folder.clicked.connect(showFilenamesList)
 main_win.show()
 app.exec_()
