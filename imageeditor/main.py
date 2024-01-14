@@ -1,4 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QListWidget, QHBoxLayout, QVBoxLayout, QFileDialog
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt
 from PIL import Image, ImageFilter
 from os import *
 
@@ -58,12 +60,50 @@ def showFilenamesList():
     file_list.clear
     file_list.addItems(result)
 
-def UploadImage():
-    image = file_list.selectedItems()[0].text()
-    with Image.open(image) as original:
-        lb_picture.setText(image)
+class ImageProcessor():
+    def __init__(self):
+        self.image = None
+        self.dir = None
+        self.filename = None
+        self.save_dir = "Modified/"
+    
+    def loadImage(self, filename):
+        self.filename = filename
+        file_path = path.join(workdir, filename)
+        self.image = Image.open(file_path)
+    
+    def showImage(self, path):
+        lb_picture.hide()
+        pixmapimage = QPixmap(path)
+        w, h = lb_picture.width(), lb_picture.height()
+        pixmapimage = pixmapimage.scaled(w, h, Qt.AspectRatioMode.KeepAspectRatio)
+        lb_picture.setPixmap(pixmapimage)
+        lb_picture.show()
 
-file_list.itemClicked.connect(UploadImage)
+    def saveImage(self):
+        save_path = path.join(workdir, self.save_dir)
+        if not (path.exists(save_path) or path.isdir(save_path)):
+            mkdir(save_path)
+        file_path = path.join(save_path, self.filename)
+        self.image.save(file_path)
+    
+    def do_bw(self):
+        self.image = self.image.convert("L")
+        self.saveImage()
+        image_path = path.join(workdir, self.save_dir, self.filename)
+        self.showImage(image_path)
+
+workimage = ImageProcessor()
+
+def showChosenImage():
+    if file_list.currentRow() >= 0:
+        filename = file_list.currentItem().text()
+        workimage.loadImage(filename)
+        workimage.showImage(path.join(workdir, filename))
+
+
+btn_black_white.clicked.connect(workimage.do_bw)
+file_list.itemClicked.connect(showChosenImage)
 btn_open_folder.clicked.connect(showFilenamesList)
 main_win.show()
 app.exec_()
