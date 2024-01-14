@@ -93,6 +93,30 @@ class ImageProcessor():
         image_path = path.join(workdir, self.save_dir, self.filename)
         self.showImage(image_path)
 
+    def rotate_left(self):
+        self.image = self.image.transpose(Image.ROTATE_90)
+        self.saveImage()
+        image_path = path.join(workdir, self.save_dir, self.filename)
+        self.showImage(image_path)
+    
+    def rotate_right(self):
+        self.image = self.image.transpose(Image.ROTATE_270)
+        self.saveImage()
+        image_path = path.join(workdir, self.save_dir, self.filename)
+        self.showImage(image_path)
+
+    def do_mirror(self):
+        self.image = self.image.transpose(Image.FLIP_LEFT_RIGHT)
+        self.saveImage()
+        image_path = path.join(workdir, self.save_dir, self.filename)
+        self.showImage(image_path)
+    
+    def do_sharpness(self):
+        self.image = self.image.filter(ImageFilter.BLUR)
+        self.saveImage()
+        image_path = path.join(workdir, self.save_dir, self.filename)
+        self.showImage(image_path)
+
 workimage = ImageProcessor()
 
 def showChosenImage():
@@ -102,6 +126,10 @@ def showChosenImage():
         workimage.showImage(path.join(workdir, filename))
 
 
+btn_sharpness.clicked.connect(workimage.do_sharpness)
+btn_mirror.clicked.connect(workimage.do_mirror)
+btn_right.clicked.connect(workimage.rotate_right)
+btn_left.clicked.connect(workimage.rotate_left)
 btn_black_white.clicked.connect(workimage.do_bw)
 file_list.itemClicked.connect(showChosenImage)
 btn_open_folder.clicked.connect(showFilenamesList)
