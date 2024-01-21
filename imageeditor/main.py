@@ -112,7 +112,7 @@ class ImageProcessor():
         self.showImage(image_path)
     
     def do_sharpness(self):
-        self.image = self.image.filter(ImageFilter.BLUR)
+        self.image = self.image.filter(ImageFilter.SHARPEN)
         self.saveImage()
         image_path = path.join(workdir, self.save_dir, self.filename)
         self.showImage(image_path)
