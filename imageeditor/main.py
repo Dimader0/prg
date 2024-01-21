@@ -134,8 +134,11 @@ open_action = QAction("Open", main_win)
 open_action.setShortcut("Ctrl+0")
 save_action = QAction("Save", main_win)
 save_action.setShortcut("Ctrl+s")
+close_action = QAction("Close", main_win)
+close_action.setShortcut("Ctrl+q")
 file_menu.addAction(open_action)
 file_menu.addAction(save_action)
+file_menu.addAction(close_action)
 
 def save_file():
     file_name, _ = QFileDialog.getSaveFileName(main_win, "Save File", "", "JPEG (*.jpg);;PNG (*.png);;GIF (*.gif)")
@@ -143,6 +146,14 @@ def save_file():
     if file_name:
         image = Image.open(workdir + '/' + workimage.save_dir + '/' + file_list.currentItem().text())
         image.save(file_name, "JPEG")
+
+def open_file():
+    file_name, _ = QFileDialog.getOpenFileName(main_win, "Open File", "", "JPEG (*.jpg);;PNG (*.png);;GIF (*.gif)")
+    
+    if file_name:
+        workimage.showImage(file_name)
+        workimage.image = Image.open(file_name)
+
 
 btn_sharpness.clicked.connect(workimage.do_sharpness)
 btn_mirror.clicked.connect(workimage.do_mirror)
@@ -152,5 +163,7 @@ btn_black_white.clicked.connect(workimage.do_bw)
 file_list.itemClicked.connect(showChosenImage)
 btn_open_folder.clicked.connect(showFilenamesList)
 save_action.triggered.connect(save_file)
+open_action.triggered.connect(open_file)
+close_action.triggered.connect(main_win.close)
 main_win.show()
 app.exec_()
