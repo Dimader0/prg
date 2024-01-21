@@ -1,11 +1,12 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QListWidget, QHBoxLayout, QVBoxLayout, QFileDialog
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QListWidget, QHBoxLayout, QVBoxLayout, QFileDialog, QMainWindow, QAction
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PIL import Image, ImageFilter
 from os import *
 
 app = QApplication([])
-main_win = QWidget()
+main_win = QMainWindow()
+screen = QWidget()
 main_win.setWindowTitle("Графічний редактор")
 main_win.resize(700,500)
 lb_picture = QLabel("Зоображення")
@@ -38,7 +39,9 @@ col_2.addLayout(button_layout)
 
 main_layout.addLayout(col_1, 20)
 main_layout.addLayout(col_2, 80)
-main_win.setLayout(main_layout)
+screen.setLayout(main_layout)
+
+main_win.setCentralWidget(screen)
 
 workdir = ''
 def chooseWorkdir():
@@ -125,6 +128,21 @@ def showChosenImage():
         workimage.loadImage(filename)
         workimage.showImage(path.join(workdir, filename))
 
+menubar = main_win.menuBar()
+file_menu = menubar.addMenu("Файл")
+open_action = QAction("Open", main_win)
+open_action.setShortcut("Ctrl+0")
+save_action = QAction("Save", main_win)
+save_action.setShortcut("Ctrl+s")
+file_menu.addAction(open_action)
+file_menu.addAction(save_action)
+
+def save_file():
+    file_name, _ = QFileDialog.getSaveFileName(main_win, "Save File", "", "JPEG (*.jpg);;PNG (*.png);;GIF (*.gif)")
+
+    if file_name:
+        image = Image.open(workdir + '/' + workimage.save_dir + '/' + file_list.currentItem().text())
+        image.save(file_name, "JPEG")
 
 btn_sharpness.clicked.connect(workimage.do_sharpness)
 btn_mirror.clicked.connect(workimage.do_mirror)
@@ -133,5 +151,6 @@ btn_left.clicked.connect(workimage.rotate_left)
 btn_black_white.clicked.connect(workimage.do_bw)
 file_list.itemClicked.connect(showChosenImage)
 btn_open_folder.clicked.connect(showFilenamesList)
+save_action.triggered.connect(save_file)
 main_win.show()
 app.exec_()
