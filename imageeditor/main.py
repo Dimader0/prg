@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QListWidget, QHBoxLayout, QVBoxLayout, QFileDialog, QMainWindow, QAction
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt
 from PIL import Image, ImageFilter
 from os import *
@@ -132,7 +132,7 @@ menubar = main_win.menuBar()
 file_menu = menubar.addMenu("Файл")
 open_action = QAction("Open", main_win)
 open_action.setShortcut("Ctrl+0")
-save_action = QAction("Save", main_win)
+save_action = QAction(QIcon("ImageEditor\8666542_save_icon.png"), "Save", main_win)
 save_action.setShortcut("Ctrl+s")
 close_action = QAction("Close", main_win)
 close_action.setShortcut("Ctrl+q")
