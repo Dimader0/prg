@@ -3,6 +3,7 @@ from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt
 from PIL import Image, ImageFilter
 from os import *
+from paintwindow import paintWindow
 
 app = QApplication([])
 main_win = QMainWindow()
@@ -42,6 +43,11 @@ main_layout.addLayout(col_2, 80)
 screen.setLayout(main_layout)
 
 main_win.setCentralWidget(screen)
+
+def createCanvas():
+    global col_2
+    canvas = paintWindow()
+    col_2.addWidget(canvas)
 
 workdir = ''
 def chooseWorkdir():
@@ -136,6 +142,9 @@ save_action = QAction(QIcon("ImageEditor\8666542_save_icon.png"), "Save", main_w
 save_action.setShortcut("Ctrl+s")
 close_action = QAction("Close", main_win)
 close_action.setShortcut("Ctrl+q")
+new_action = QAction("New", main_win)
+new_action.setShortcut("Ctrl+n")
+file_menu.addAction(new_action)
 file_menu.addAction(open_action)
 file_menu.addAction(save_action)
 file_menu.addAction(close_action)
@@ -182,6 +191,7 @@ btn_open_folder.clicked.connect(showFilenamesList)
 save_action.triggered.connect(save_file)
 open_action.triggered.connect(open_file)
 close_action.triggered.connect(main_win.close)
+new_action.triggered.connect(createCanvas)
 do_bw_act.triggered.connect(workimage.do_bw)
 do_mirror_act.triggered.connect(workimage.do_mirror)
 do_sharpness_act.triggered.connect(workimage.do_sharpness)
