@@ -39,6 +39,6 @@ class paintWindow(QMainWindow):
             self.canvas.setPixmap(self.image)
 
     def mouseReleaseEvent(self, event):
-        if event.button() == Qt.LeftButton:
+        if event.button == Qt.LeftButton:
             self.last_point = None
     

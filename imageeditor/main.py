@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 from PIL import Image, ImageFilter
 from os import *
 from paintwindow import paintWindow
+from styles import style
 
 app = QApplication([])
 main_win = QMainWindow()
@@ -197,5 +198,8 @@ do_mirror_act.triggered.connect(workimage.do_mirror)
 do_sharpness_act.triggered.connect(workimage.do_sharpness)
 rotate_left_act.triggered.connect(workimage.rotate_left)
 rotate_right_act.triggered.connect(workimage.rotate_right)
+
+main_win.setStyleSheet(style)
+
 main_win.show()
 app.exec_()
