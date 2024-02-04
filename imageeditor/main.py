@@ -186,6 +186,13 @@ editor_menu.addAction(do_mirror_act)
 editor_menu.addAction(do_sharpness_act)
 editor_menu.addAction(do_bw_act)
 
+# створення вікна для малювання
+def createCanvas():
+    global col_2
+    canvas = PaintWindow()
+    col_2.addWidget(canvas)
+
+# збереження картинки у вибрану папку
 def save_file():
     file_name, _ = QFileDialog.getSaveFileName(main_win, "Save File", "", "JPEG (*.jpg);;PNG (*.png);;GIF (*.gif)")
 
@@ -193,6 +200,7 @@ def save_file():
         image = Image.open(workdir + '/' + workimage.save_dir + '/' + file_list.currentItem().text())
         image.save(file_name, "JPEG")
 
+# відкриття одної картинки
 def open_file():
     file_name, _ = QFileDialog.getOpenFileName(main_win, "Open File", "", "JPEG (*.jpg);;PNG (*.png);;GIF (*.gif)")
     
@@ -200,11 +208,6 @@ def open_file():
         workimage.showImage(file_name)
         workimage.image = Image.open(file_name)
 
-# створення вікна для малювання
-def createCanvas():
-    global col_2
-    canvas = PaintWindow()
-    col_2.addWidget(canvas)
 
 # підключення кнопок
 btn_sharpness.clicked.connect(workimage.do_sharpness)
