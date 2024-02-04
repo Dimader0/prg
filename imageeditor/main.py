@@ -3,7 +3,7 @@ from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt
 from PIL import Image, ImageFilter
 from os import *
-from paintwindow import paintWindow
+from paintwindow import*
 from styles import style
 
 app = QApplication([])
@@ -47,7 +47,7 @@ main_win.setCentralWidget(screen)
 
 def createCanvas():
     global col_2
-    canvas = paintWindow()
+    canvas = PaintWindow()
     col_2.addWidget(canvas)
 
 workdir = ''
