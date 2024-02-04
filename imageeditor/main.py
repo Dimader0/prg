@@ -1,8 +1,13 @@
+# Завантажуємо графічні віджети
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QListWidget, QHBoxLayout, QVBoxLayout, QFileDialog, QMainWindow, QAction
+# Завнтажуємо класи для показу зоображення і іконок меню
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt
+# Завантажуємо модулі для редагування, збереження і завантаження картинок
 from PIL import Image, ImageFilter
+# Дозволяє працювати з шляхами і папками
 from os import *
+# окреме вікно яке дозволяє малювати
 from paintwindow import*
 from styles import style
 
@@ -10,7 +15,8 @@ app = QApplication([])
 main_win = QMainWindow()
 screen = QWidget()
 main_win.setWindowTitle("Графічний редактор")
-main_win.resize(700,500)
+main_win.resize(1000,600)
+
 lb_picture = QLabel("Зоображення")
 file_list = QListWidget()
 btn_open_folder = QPushButton("Папка")
@@ -45,16 +51,14 @@ screen.setLayout(main_layout)
 
 main_win.setCentralWidget(screen)
 
-def createCanvas():
-    global col_2
-    canvas = PaintWindow()
-    col_2.addWidget(canvas)
 
-workdir = ''
+workdir = '' # створення глобальної змінної для збереження робочої папки
+# вибір робочої папки
 def chooseWorkdir():
     global workdir
     workdir = QFileDialog.getExistingDirectory()
 
+# відфільтровує файли, залишаючи тільки графічні
 def filter(filenames, extenshions):
     result = []
     for filename in filenames:
@@ -63,6 +67,7 @@ def filter(filenames, extenshions):
                 result.append(filename)
     return result
 
+# завантаження відфільтрованих файлів 
 def showFilenamesList():
     chooseWorkdir()
     extenshions = ['.jpg', '.png', '.gif', '.bmp']
@@ -70,73 +75,85 @@ def showFilenamesList():
     file_list.clear
     file_list.addItems(result)
 
+# клас для редагування картинок
 class ImageProcessor():
     def __init__(self):
-        self.image = None
-        self.dir = None
-        self.filename = None
-        self.save_dir = "Modified/"
+        self.image = None # об'єкт картинки
+        self.dir = None # робоча папка
+        self.filename = None # назва файлу з яким ми зараз працюємо
+        self.save_dir = "Modified/" # папка для збереження модифікованих файлів
     
+    # завантаження картинки
     def loadImage(self, filename):
         self.filename = filename
-        file_path = path.join(workdir, filename)
-        self.image = Image.open(file_path)
+        file_path = path.join(workdir, filename) #об'єднання шляху до картинки з ім'ям картинки
+        self.image = Image.open(file_path) #відкрити картинку за шляхом
     
+    # відображення картинки
     def showImage(self, path):
         lb_picture.hide()
-        pixmapimage = QPixmap(path)
-        w, h = lb_picture.width(), lb_picture.height()
-        pixmapimage = pixmapimage.scaled(w, h, Qt.AspectRatioMode.KeepAspectRatio)
-        lb_picture.setPixmap(pixmapimage)
+        pixmapimage = QPixmap(path) # відкрити картинку
+        w, h = lb_picture.width(), lb_picture.height() # підігнати розміри картинки під розміри полотна
+        pixmapimage = pixmapimage.scaled(w, h, Qt.AspectRatioMode.KeepAspectRatio) # відключити деформацію картинки
+        lb_picture.setPixmap(pixmapimage) # вставляємо картинку в полотно
         lb_picture.show()
 
+    # збереження модифікованої картинки
     def saveImage(self):
         save_path = path.join(workdir, self.save_dir)
-        if not (path.exists(save_path) or path.isdir(save_path)):
-            mkdir(save_path)
-        file_path = path.join(save_path, self.filename)
-        self.image.save(file_path)
+        if not (path.exists(save_path) or path.isdir(save_path)): # якщо папка для збереження не існує
+            mkdir(save_path) # створюємо папку для збереження
+        file_path = path.join(save_path, self.filename) # шлях до папки для збереження та назва файлу картинки
+        self.image.save(file_path) # збереження картинки
     
+    # чорно-білий фільтр
     def do_bw(self):
         self.image = self.image.convert("L")
         self.saveImage()
         image_path = path.join(workdir, self.save_dir, self.filename)
         self.showImage(image_path)
 
+    # поворот наліво
     def rotate_left(self):
         self.image = self.image.transpose(Image.ROTATE_270)
         self.saveImage()
         image_path = path.join(workdir, self.save_dir, self.filename)
         self.showImage(image_path)
     
+    # поворот направо
     def rotate_right(self):
         self.image = self.image.transpose(Image.ROTATE_90)
         self.saveImage()
         image_path = path.join(workdir, self.save_dir, self.filename)
         self.showImage(image_path)
 
+    # відзеркалення
     def do_mirror(self):
         self.image = self.image.transpose(Image.FLIP_LEFT_RIGHT)
         self.saveImage()
         image_path = path.join(workdir, self.save_dir, self.filename)
         self.showImage(image_path)
     
+    # різкість
     def do_sharpness(self):
         self.image = self.image.filter(ImageFilter.SHARPEN)
         self.saveImage()
         image_path = path.join(workdir, self.save_dir, self.filename)
         self.showImage(image_path)
 
+# об'єкт класу для оборобки картинки
 workimage = ImageProcessor()
 
+# обрати зі списку картинку для обробки
 def showChosenImage():
     if file_list.currentRow() >= 0:
         filename = file_list.currentItem().text()
         workimage.loadImage(filename)
         workimage.showImage(path.join(workdir, filename))
 
+# створення менюбар
 menubar = main_win.menuBar()
-file_menu = menubar.addMenu("Файл")
+file_menu = menubar.addMenu("Файл") # створення меню Файл
 open_action = QAction("Open", main_win)
 open_action.setShortcut("Ctrl+0")
 save_action = QAction(QIcon("ImageEditor\8666542_save_icon.png"), "Save", main_win)
@@ -145,12 +162,13 @@ close_action = QAction("Close", main_win)
 close_action.setShortcut("Ctrl+q")
 new_action = QAction("New", main_win)
 new_action.setShortcut("Ctrl+n")
+# додаємо дії до меню Файл
 file_menu.addAction(new_action)
 file_menu.addAction(open_action)
 file_menu.addAction(save_action)
 file_menu.addAction(close_action)
 
-editor_menu = menubar.addMenu("Editor")
+editor_menu = menubar.addMenu("Editor") # створення меню Editor
 do_bw_act = QAction("Ч/Б", main_win)
 do_bw_act.setShortcut("Ctrl+x")
 do_sharpness_act = QAction("Різкість", main_win)
@@ -161,6 +179,7 @@ rotate_left_act = QAction("Вліво", main_win)
 rotate_left_act.setShortcut("Ctrl+l")
 rotate_right_act = QAction("Вправо", main_win)
 rotate_right_act.setShortcut("Ctrl+r")
+# додаємо дії до меню Файл
 editor_menu.addAction(rotate_right_act)
 editor_menu.addAction(rotate_left_act)
 editor_menu.addAction(do_mirror_act)
@@ -181,7 +200,13 @@ def open_file():
         workimage.showImage(file_name)
         workimage.image = Image.open(file_name)
 
+# створення вікна для малювання
+def createCanvas():
+    global col_2
+    canvas = PaintWindow()
+    col_2.addWidget(canvas)
 
+# підключення кнопок
 btn_sharpness.clicked.connect(workimage.do_sharpness)
 btn_mirror.clicked.connect(workimage.do_mirror)
 btn_right.clicked.connect(workimage.rotate_right)
